@@ -1,5 +1,5 @@
-from .faker import fixedSchema as fs
-from .yamlparse import parser as yp
+from mimic.faker import fixedSchema as fs
+from mimic.yamlparse import parser as yp
 from loguru import logger
 import pandas as pd
 from typing import List
@@ -125,8 +125,8 @@ def processTable(table: List[dict]):
     df = processStaticSchema(StaticColumns, df)
     df = processSelectionSchema(SelectionColumns, df)
     df = processFixedSchema(ExpressionColumns, df, rows)
-    df = df[column_order]  # .drop("id",1)
-    return [{"name": name, "data": df}]
+    df = df[column_order]#.drop("id",axis=0)
+    return {"name": name, "data": df}
 
 
 def processSchema(config: dict) -> List[dict]:
@@ -134,13 +134,15 @@ def processSchema(config: dict) -> List[dict]:
     Main Function which takes the schema of all tables and process 
     """
     logger.info("Processing Schema")
+    tables = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         future_to_process = {
             executor.submit(processTable, table): table for table in config["tables"]
         }
         for future in concurrent.futures.as_completed(future_to_process):
             data = future.result()
-    return data
+            tables.append(data)
+    return tables
 
 
 output = r"tests/data"
