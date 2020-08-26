@@ -8,4 +8,4 @@ Author-email: gopalkrishna.naredla@gmail.com
 License: UNKNOWN
 Description: UNKNOWN
 Platform: UNKNOWN
-Requires-Python: >=3.8,<4.0
+Requires-Python: >=3.6,<4.0

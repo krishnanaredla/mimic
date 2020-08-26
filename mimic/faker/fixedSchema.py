@@ -25,9 +25,9 @@ class Switcher(object):
         start: float = 1.0,
         end: float = 1000.0,
         precision: int = 3,
-        start_date: int =  2000,
-        end_date: int  =  2022,
-        domains: List[str] = None
+        start_date: int = 2000,
+        end_date: int = 2022,
+        domains: List[str] = None,
     ):
         """Main Function which invokes required value based on the argument passed"""
         self.mask = mask
@@ -36,7 +36,7 @@ class Switcher(object):
         self.precision = precision
         self.start_date = start_date
         self.end_date = end_date
-        self.domains = domains 
+        self.domains = domains
         self._ = Field("en")
         method_name = argument
         method = getattr(self, method_name, lambda: "Invalid Function")
@@ -45,6 +45,7 @@ class Switcher(object):
     def custom_code(self):
         """Generates a string in specified format"""
         return rd.Random().custom_code(mask=self.mask)
+
     def getNameData(self):
         """Returns gender,full_name,first_name and last_name"""
         sex = random.choice(["male", "female"])
@@ -72,11 +73,11 @@ class Switcher(object):
 
     def email(self):
         """"Returns a random generated mail id"""
-        return self._("email",domains=self.domains)
+        return self._("email", domains=self.domains)
 
     def numbers(self):
         """Return a random number"""
-        return self._("integer_number",start=int(self.start),end=int(self.end))
+        return self._("integer_number", start=int(self.start), end=int(self.end))
 
     def decimals(self):
         """
@@ -86,32 +87,39 @@ class Switcher(object):
         return self._(
             "float_number", start=self.start, end=self.end, precision=self.precision
         )
-    
+
     def city(self):
         """Returns a random city"""
         return self._("city")
+
     def country(self):
         """Returns a random country"""
         return self._("country")
+
     def state(self):
         """Returns a random state"""
         return self._("state")
+
     def zip_code(self):
         """Returns a random zip code"""
         return self._("zip_code")
+
     def randomDate(self):
         """Returns a random date"""
-        return self._("datetime",start=self.start_date,end=self.end_date)
+        return self._("datetime", start=self.start_date, end=self.end_date)
+
     def randomDay(self):
         """Return a random day"""
         return self._("day_of_month")
+
     def randomMonth(self):
         """Returns a random month name"""
         return self._("month")
+
     def randomYear(self):
         """Returns a random year"""
         return self._("year")
+
     def randomTimestamp(self):
         """Returns a random timestamp"""
         return self._("timestamp")
-    
