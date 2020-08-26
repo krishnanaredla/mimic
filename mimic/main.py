@@ -1,5 +1,5 @@
-import faker.fixedSchema as fs
-import yamlparse.parser as yp
+from .faker import fixedSchema as fs
+from .yamlparse import parser as yp
 from loguru import logger
 import pandas as pd
 from typing import List
