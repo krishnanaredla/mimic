@@ -1,0 +1,14 @@
+README.rst
+setup.py
+mimic/__init__.py
+mimic/main.py
+mimic/requirements.txt
+mimic.egg-info/PKG-INFO
+mimic.egg-info/SOURCES.txt
+mimic.egg-info/dependency_links.txt
+mimic.egg-info/requires.txt
+mimic.egg-info/top_level.txt
+mimic/faker/__init__.py
+mimic/faker/fixedSchema.py
+mimic/yamlparse/__init__.py
+mimic/yamlparse/parser.py
