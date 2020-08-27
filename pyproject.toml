@@ -7,7 +7,7 @@ authors = ["Krishna Naredla <gopalkrishna.naredla@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.6"
 pyyaml = "^5.3.1"
-pandas = "^1.1.1"
+pandas = "^1.0.5"
 mimesis = "^4.1.1"
 loguru = "^0.5.1"
 
