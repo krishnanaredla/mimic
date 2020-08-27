@@ -46,7 +46,7 @@ class Switcher(object):
 
     def custom_code(self):
         """Generates a string in specified format"""
-        return rd.Random().custom_code(mask=self.mask)
+        return [rd.Random().custom_code(mask=self.mask) for count in range(self.rows)]
 
     def getNameData(self):
         """Returns gender,full_name,first_name and last_name"""
