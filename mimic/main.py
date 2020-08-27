@@ -1,8 +1,10 @@
 import sys
 import os
 
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
+PACKAGE_PARENT = ".."
+SCRIPT_DIR = os.path.dirname(
+    os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__)))
+)
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from mimic.faker import fixedSchema as fs
@@ -56,29 +58,37 @@ def processSelectionSchema(data: List[dict], df: pd.DataFrame) -> pd.DataFrame:
             logger.error(e)
     return df
 
-def processExpressionSchema(data:List[dict],df:pd.DataFrame,rows:int) -> pd.DataFrame:
+
+def processExpressionSchema(
+    data: List[dict], df: pd.DataFrame, rows: int
+) -> pd.DataFrame:
     logger.info("Generating Fake data from mimesis")
     getFixedSchema = fs.Switcher()
     logger.info("Getting Names Data")
     data_dict = {}
     for column in data:
         if "custom_values" in column:
-            logger.info("Getting Custom values for {0}".format(column['name']))
+            logger.info("Getting Custom values for {0}".format(column["name"]))
             print(column["custom_values"])
-            data_dict.update({column["name"] : 
-                        getFixedSchema.faker(column["value"],rows, **column["custom_values"])
-                     })
+            data_dict.update(
+                {
+                    column["name"]: getFixedSchema.faker(
+                        column["value"], rows, **column["custom_values"]
+                    )
+                }
+            )
             logger.info("completed custom values for {0}".format(column["name"]))
             print(data_dict)
-        else :
-            logger.info("getting generic values for {0}".format(column['name']))
-            data_dict.update({column["name"] : getFixedSchema.faker(column["value"],rows)})
+        else:
+            logger.info("getting generic values for {0}".format(column["name"]))
+            data_dict.update(
+                {column["name"]: getFixedSchema.faker(column["value"], rows)}
+            )
             logger.info("Completed generic values for {0}".format(column["name"]))
             print(data_dict)
     df = pd.DataFrame(data_dict)
     return df
 
-            
 
 def processFixedSchema(data: List[dict], df: pd.DataFrame, rows: int) -> pd.DataFrame:
     logger.info("Generating Fake Data from mimesis")
@@ -86,14 +96,14 @@ def processFixedSchema(data: List[dict], df: pd.DataFrame, rows: int) -> pd.Data
     logger.info("Getting Names Data")
     try:
         names = pd.DataFrame(
-            #[getFixedSchema.faker("getNameData") for pos in range(rows)]
-            getFixedSchema.faker("getNameData",rows)
+            # [getFixedSchema.faker("getNameData") for pos in range(rows)]
+            getFixedSchema.faker("getNameData", rows)
         )
-        
+
         logger.info("Completed Names")
     except Exception as e:
         logger.error(e)
-    
+
     for column in data:
         if column["value"].lower() in [
             "full_name",
@@ -107,14 +117,16 @@ def processFixedSchema(data: List[dict], df: pd.DataFrame, rows: int) -> pd.Data
             except Exception as e:
                 logger.error(e)
         if "custom_values" in column:
-            logger.info("Getting Custom values for {0}".format(column['name']))
+            logger.info("Getting Custom values for {0}".format(column["name"]))
             try:
                 df[column["name"]] = pd.DataFrame(
-                    #[
+                    # [
                     #    getFixedSchema.faker(column["value"], **column["custom_values"])
                     #    for pos in range(rows)
-                    #]
-                    getFixedSchema.faker(column["value"],rows,**column["custom_values"])
+                    # ]
+                    getFixedSchema.faker(
+                        column["value"], rows, **column["custom_values"]
+                    )
                 )
                 logger.info("completed custom values for {0}".format(column["name"]))
             except Exception as e:
@@ -126,10 +138,10 @@ def processFixedSchema(data: List[dict], df: pd.DataFrame, rows: int) -> pd.Data
                 logger.error(e)
         else:
             try:
-                logger.info("getting generic values for {0}".format(column['name']))
+                logger.info("getting generic values for {0}".format(column["name"]))
                 df[column["name"]] = pd.DataFrame(
-                    #[getFixedSchema.faker(column["value"]) for pos in range(rows)]
-                    getFixedSchema.faker(column["value"],rows)
+                    # [getFixedSchema.faker(column["value"]) for pos in range(rows)]
+                    getFixedSchema.faker(column["value"], rows)
                 )
                 logger.info("Completed generic values for {0}".format(column["name"]))
             except Exception as e:
@@ -166,7 +178,7 @@ def processTable(table: List[dict]):
     df = processStaticSchema(StaticColumns, df)
     df = processSelectionSchema(SelectionColumns, df)
     df = processFixedSchema(ExpressionColumns, df, rows)
-    #df = processExpressionSchema(ExpressionColumns, df, rows)
+    # df = processExpressionSchema(ExpressionColumns, df, rows)
     df = df[column_order]
     return {"name": name, "data": df}
 
@@ -186,14 +198,16 @@ def processSchema(config: dict) -> List[dict]:
             tables.append(data)
     return tables
 
-def writeOutput(df:pd.DataFrame,name:str,output:str)->None:
+
+def writeOutput(df: pd.DataFrame, name: str, output: str) -> None:
     if not os.path.exists(output):
         os.mkdir(output)
     logger.info("Writing file {0}".format(name))
     fileName = os.path.join(output, name + ".parquet")
-    df.to_parquet(fileName) 
-    #print(df)
+    df.to_parquet(fileName)
+    # print(df)
     return None
+
 
 def generateFakeData(path: str, output: str) -> None:
     logger.info("Process Started")
@@ -201,23 +215,19 @@ def generateFakeData(path: str, output: str) -> None:
     data = processSchema(config)
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         future_to_process = {
-            executor.submit(writeOutput, file["data"],file["name"],output): file for file in data
+            executor.submit(writeOutput, file["data"], file["name"], output): file
+            for file in data
         }
         for future in concurrent.futures.as_completed(future_to_process):
             data = future.result()
     logger.info("Fake Data Generated Successfully")
     return None
 
-parser = argparse.ArgumentParser(
-    description="CLI for generating Fake data"
-)
-parser.add_argument(
-    "--config","-c", help="config file location"
-)
 
-parser.add_argument(
-    "--output","-o", help="output location"
-)
+parser = argparse.ArgumentParser(description="CLI for generating Fake data")
+parser.add_argument("--config", "-c", help="config file location")
+
+parser.add_argument("--output", "-o", help="output location")
 
 args = parser.parse_args()
 
