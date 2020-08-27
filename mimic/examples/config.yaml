@@ -1,0 +1,71 @@
+tables:
+
+- name: customers
+  rows: 2000
+  columns:
+  - name : Name
+    column_type : Expression
+    value : full_name
+  - name : First Name
+    column_type : Expression
+    value : first_name
+  - name : Last Name
+    column_type : Expression
+    value : last_name
+  - name : Address
+    column_type : Expression
+    value : address
+  - name: mail
+    column_type: Expression
+    value : email
+    custom_values :
+      domains : ['bcbsnc.com']
+  - name: phone
+    column_type: Expression
+    value: phone
+    custom_values:
+       mask : +1-###-###-###
+  - name: cost
+    column_type : Expression
+    value: decimals
+    custom_values:
+       start : 10
+       end : 1000
+       precision : 3
+  - name : purchase date
+    column_type : Expression
+    value: randomDate
+    custom_values:
+       start : 2011
+       end : 2019
+ 
+- name: orders
+  rows: 10000
+  columns:
+  - name: orderID
+    column_type: Expression
+    value : custom_code
+    custom_values:
+       mask : ORD@@@@####
+  - name: Order Date
+    column_type: Expression
+    value: randomDate
+    custom_values:
+       start : 2011
+       end : 2019
+  - name: Order Value
+    column_type: Expression
+    value: decimals
+    custom_values:
+       start : 1000
+       end : 10000
+       precision : 2
+  - name: Order Type
+    column_type : Static
+    value: COD
+  - name: Order Category
+    column_type : Selection
+    value : ['Electronics','Home','Furnish']
+  - name : city
+    column_type : Selection
+    value : [halifax,durham,toronto]       
