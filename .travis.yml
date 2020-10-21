@@ -6,5 +6,6 @@ before_install:
 install:
 - poetry install
 script:
-- poetry run flake8 mimic test
+- poetry run flake8 .
+- poetry run black mimic
 - poetry run pytest
