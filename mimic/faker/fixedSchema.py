@@ -149,4 +149,4 @@ class Switcher(object):
 
     def randomTimestamp(self):
         """Returns a random timestamp"""
-        return [[datetime.utcfromtimestamp(int(self._("timestamp"))).strftime('%Y-%m-%d %H:%M:%S') for count in range(self.rows)]]
+        return [datetime.utcfromtimestamp(int(self._("timestamp"))).strftime('%Y-%m-%d %H:%M:%S') for count in range(self.rows)]
